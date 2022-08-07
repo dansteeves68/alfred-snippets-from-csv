@@ -41,9 +41,7 @@ class snippets_from_csv(object):
 
     def add_plist(self):
         plist = self.bname + ".plist"
-        print(plist, src_files)
         if plist in src_files:
-            print(plist)
             shutil.copyfile(
                 os.path.join(self.src_dir, plist),
                 os.path.join(self.products_path, "info.plist"),
