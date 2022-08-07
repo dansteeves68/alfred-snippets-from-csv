@@ -6,6 +6,7 @@ import csv
 import json
 import os
 import shutil
+import tempfile
 import uuid
 from glob import glob
 
@@ -16,14 +17,7 @@ class snippets_from_csv(object):
         self.src_dir = os.path.abspath(src_dir)
         self.bname = self.csvfile.split(".")[0]
         self.src_files = src_files
-        self.products_path = os.path.abspath("./products")
-
-    def remove_old(self):
-        for old_snippet in glob(os.path.join(self.products_path, "*")):
-            os.remove(old_snippet)
-
-    def make_products_path(self):
-        os.makedirs(self.products_path, exist_ok=True)
+        self.products_path = tempfile.mkdtemp()
 
     def write_snippets(self):
         with open(os.path.join(self.src_dir, csv_file), "r") as csvfile:
@@ -53,11 +47,10 @@ class snippets_from_csv(object):
         os.rename(bname + ".zip", bname + ".alfredsnippets")
 
     def main(self):
-        self.remove_old()
-        self.make_products_path()
         self.write_snippets()
         self.add_plist()
         self.prepare_file()
+        shutil.rmtree(self.products_path)
 
 
 if __name__ == "__main__":
